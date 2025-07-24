@@ -5,6 +5,25 @@ The primary objective of this project was to develop a machine learning model to
 
 ---
 
+## Data Structure and Modeling Approach
+
+- **Dataset:** The training dataset consists of 100,000 rows, with each customer represented by 8 rows—one for each month. The target variable is the credit score for each month.
+- **Objective:** Predict the monthly credit score for each customer based on their historical financial and personal data.
+- **Time-Series Nature:** Since each customer has multiple records over time, the data is inherently time-series and requires careful handling to avoid data leakage.
+
+### Train/Test Split Strategy
+
+- **Initial Approach:**  
+  - For each customer, the first 6 months were used for training, and the last 2 months were used for validation/testing.
+  - This simulates a real-world scenario where we predict future credit scores based on past data, and prevents data leakage.
+  - This approach achieved an accuracy of approximately 72%.
+
+- **Final Model for Deployment:**  
+  - After validating the approach, the model was retrained on the complete dataset (all 8 months for each customer) to maximize the use of available data.
+  - The final model was then used to predict credit scores on the test set, and this version was deployed.
+
+---
+
 ## 1. Initial Data Exploration (EDA)
 The project began with a thorough exploration of the provided dataset (`train.csv`), which contained 100,000 records across 28 columns.
 
@@ -475,6 +494,30 @@ weighted avg       0.73      0.73      0.73     25000
 ```
 
 ---
+
+### Time-Series Feature Engineering: Lag and Rolling Features
+
+To better capture temporal patterns in the data, I engineered lag and rolling window features for each customer:
+- **Lag Features:** For key financial columns (e.g., Annual Income, Monthly Inhand Salary, Outstanding Debt, Total EMI per month), I created features representing the value from the previous month for each customer.
+- **Rolling Window Features:** For variables like number of delayed payments, interest rate, and number of credit inquiries, I computed the average over the last three months for each customer.
+- **Data Sorting and Type Handling:** The data was sorted by customer and month, and all relevant columns were converted to numeric types to ensure correct aggregation.
+
+This approach allowed the model to leverage both recent history and longer-term trends for each customer, improving its ability to predict credit score changes over time.
+
+**RandomForest Results with Lag and Rolling Features:**
+
+```
+Classification Report for RandomForest:
+              precision    recall  f1-score   support
+
+        Good       0.67      0.61      0.64      4824
+        Poor       0.71      0.75      0.73      7216
+    Standard       0.73      0.73      0.73     12960
+
+    accuracy                           0.71     25000
+   macro avg       0.70      0.70      0.70     25000
+weighted avg       0.71      0.71      0.71     25000
+```
 
 ## 6. Conclusion and Next Steps
 This project successfully established a robust pipeline for predicting credit scores from complex, time-series data. The initial RandomForest model achieved a promising accuracy of 70.5% after addressing critical data quality and leakage issues.
