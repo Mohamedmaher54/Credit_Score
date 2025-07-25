@@ -701,12 +701,6 @@ streamlit run app/main.py
 
 ---
 
-## License
-
-MIT License (or specify your own)
-
----
-
 ## Contact
 
 For questions or contributions, please open an issue or pull request. 
