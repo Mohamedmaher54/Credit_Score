@@ -680,7 +680,7 @@ streamlit run app/main.py
 ---
 
 ## Data
-
+- create folder named data then
 - Place your training and test CSVs in the `data/` directory.
 - Example files: `train.csv`, `test.csv`
 
