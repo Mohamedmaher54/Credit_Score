@@ -41,7 +41,6 @@ env.bak/
 venv.bak/
 
 # Data and Model files
-data/
 model/
 eda_report/
 *.csv
